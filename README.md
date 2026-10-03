@@ -2,8 +2,6 @@
 
 Aplicación web desarrollada como SPA para visualizar información de mercado de criptomonedas utilizando la API pública de CoinGecko.
 
-El proyecto permite consultar los principales activos, buscar criptomonedas por nombre o símbolo, visualizar información adicional de cada activo y mantener los datos actualizados automáticamente.
-
 ## Tecnologías utilizadas
 
 - Angular CLI 20.3.8
@@ -126,6 +124,7 @@ De esta forma, la carpeta debe quedar localmente de la siguiente manera:
 environments/
 ├── environment.example.ts
 └── environment.ts
+```
 
 # Instalación
 
