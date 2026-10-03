@@ -1,1 +1,60 @@
-@import "bootstrap/scss/bootstrap";
+@use "bootstrap/scss/bootstrap";
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f5f7fa;
+  color: #212529;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  max-width: 1100px;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+.btn {
+  border-radius: 10px;
+}
+
+.row {
+  margin-top: 0.5rem;
+}
+
+.alert {
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+img {
+  object-fit: cover;
+}
