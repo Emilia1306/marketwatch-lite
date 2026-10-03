@@ -1,0 +1,43 @@
+<div class="card h-100 shadow-sm">
+  <div class="card-body">
+
+    <div class="d-flex align-items-center gap-3 mb-3">
+
+      <img
+        [src]="crypto.image"
+        [alt]="crypto.name"
+        width="48"
+        height="48"
+        class="rounded-circle"
+      >
+
+      <div>
+        <h5 class="card-title mb-0">
+          {{ crypto.name }}
+        </h5>
+
+        <small class="text-muted">
+          {{ crypto.symbol.toUpperCase() }}
+        </small>
+      </div>
+
+    </div>
+
+    <p class="mb-2">
+      <strong>Precio:</strong>
+      ${{ crypto.current_price }}
+    </p>
+
+    <p class="mb-0">
+      <strong>Cambio 24h:</strong>
+
+      <span
+        [class.text-success]="crypto.price_change_percentage_24h >= 0"
+        [class.text-danger]="crypto.price_change_percentage_24h < 0"
+      >
+        {{ crypto.price_change_percentage_24h }}%
+      </span>
+    </p>
+
+  </div>
+</div>

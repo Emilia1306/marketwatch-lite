@@ -1,62 +1,77 @@
-<h1>MarketWatch Lite</h1>
+<div class="container py-4">
 
-<input
-  type="text"
-  placeholder="Buscar por nombre o símbolo"
-  [value]="searchTerm"
-  (input)="searchTerm = $any($event.target).value; filterCryptos()"
->
+  <h1 class="mb-4">
+    MarketWatch Lite
+  </h1>
 
-@if (loading) {
-  <p>Cargando criptomonedas...</p>
-}
+  <input
+    type="text"
+    class="form-control mb-4"
+    placeholder="Buscar por nombre o símbolo"
+    [value]="searchTerm"
+    (input)="searchTerm = $any($event.target).value; filterCryptos()"
+  >
 
-@if (errorMessage) {
-  <div>
-    <p>{{ errorMessage }}</p>
+  @if (loading) {
 
-    <button
-      type="button"
-      (click)="loadCryptos()"
-    >
-      Reintentar
-    </button>
-  </div>
-}
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
 
-@if (!loading && !errorMessage) {
-
-  @for (crypto of filteredCryptos; track crypto.id) {
-
-    <article>
-
-      <img
-        [src]="crypto.image"
-        [alt]="crypto.name"
-        width="40"
-      >
-
-      <h2>{{ crypto.name }}</h2>
-
-      <p>
-        {{ crypto.symbol.toUpperCase() }}
+      <p class="mt-3">
+        Cargando criptomonedas...
       </p>
-
-      <p>
-        Precio: ${{ crypto.current_price }}
-      </p>
-
-      <p>
-        Cambio 24h:
-        {{ crypto.price_change_percentage_24h }}%
-      </p>
-
-    </article>
-
-  } @empty {
-
-    <p>No se encontraron criptomonedas</p>
+    </div>
 
   }
 
-}
+  @if (errorMessage) {
+
+    <div class="alert alert-danger">
+
+      <p class="mb-3">
+        {{ errorMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="loadCryptos()"
+      >
+        Reintentar
+      </button>
+
+    </div>
+
+  }
+
+  @if (!loading && !errorMessage) {
+
+    <div class="row g-3">
+
+      @for (crypto of filteredCryptos; track crypto.id) {
+
+        <div class="col-12 col-md-6 col-lg-4">
+
+          <app-crypto-card
+            [crypto]="crypto"
+          />
+
+        </div>
+
+      } @empty {
+
+        <div class="col-12">
+
+          <div class="alert alert-secondary">
+            No se encontraron criptomonedas
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

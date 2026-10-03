@@ -3,9 +3,14 @@ import {Component, OnInit, inject} from '@angular/core';
 import { CryptoService } from './services/crypto.service';
 //importar modelo
 import { Crypto } from './models/crypto.model';
+//importar componente card
+import { CryptoCardComponent } from './components/crypto-card/crypto-card.component'
 
 @Component({
   selector: 'app-root',
+  imports: [
+    CryptoCardComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
