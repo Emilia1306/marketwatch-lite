@@ -12,7 +12,16 @@
 }
 
 @if (errorMessage) {
-  <p>{{ errorMessage }}</p>
+  <div>
+    <p>{{ errorMessage }}</p>
+
+    <button
+      type="button"
+      (click)="loadCryptos()"
+    >
+      Reintentar
+    </button>
+  </div>
 }
 
 @if (!loading && !errorMessage) {
@@ -43,6 +52,10 @@
       </p>
 
     </article>
+
+  } @empty {
+
+    <p>No se encontraron criptomonedas</p>
 
   }
 
