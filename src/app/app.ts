@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  inject
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, inject} from '@angular/core';
 
 // importar service
 import { CryptoService } from './services/crypto.service';
@@ -26,19 +21,25 @@ import { CryptoDetailComponent } from './components/crypto-detail/crypto-detail.
 })
 export class App implements OnInit, OnDestroy {
 
-  // servicio para obtener los datos de CoinGecko
+  // servicio
   private readonly cryptoService =
     inject(CryptoService);
 
   // intervalo para actualizar los datos
   private refreshInterval?: ReturnType<typeof setInterval>;
 
-  // listas de criptomonedas
+  // listas
   cryptos: Crypto[] = [];
   filteredCryptos: Crypto[] = [];
 
+  // favoritos guardados
+  favorites: string[] = [];
+
   // texto ingresado en el buscador
   searchTerm = '';
+
+  // mostrar solo favoritos
+  showOnlyFavorites = false;
 
   // estado de carga
   loading = false;
@@ -51,6 +52,8 @@ export class App implements OnInit, OnDestroy {
 
   // cargar datos al iniciar
   ngOnInit(): void {
+
+    this.loadFavorites();
     this.loadCryptos();
 
     // actualizar los datos cada 60 segundos
@@ -76,8 +79,8 @@ export class App implements OnInit, OnDestroy {
 
           this.cryptos = data;
 
-          // mantener el filtro actual después de actualizar
-          this.filterCryptos();
+          // mantener filtros después de actualizar
+          this.applyFilters();
 
           this.loading = false;
         },
@@ -98,8 +101,8 @@ export class App implements OnInit, OnDestroy {
       });
   }
 
-  // filtrar por nombre o símbolo
-  filterCryptos(): void {
+  // aplicar búsqueda y favoritos
+  applyFilters(): void {
 
     const term =
       this.searchTerm
@@ -107,10 +110,73 @@ export class App implements OnInit, OnDestroy {
         .trim();
 
     this.filteredCryptos =
-      this.cryptos.filter((crypto) =>
-        crypto.name.toLowerCase().includes(term) ||
-        crypto.symbol.toLowerCase().includes(term)
-      );
+      this.cryptos.filter((crypto) => {
+
+        const matchesSearch =
+          crypto.name.toLowerCase().includes(term) ||
+          crypto.symbol.toLowerCase().includes(term);
+
+        const matchesFavorite =
+          !this.showOnlyFavorites ||
+          this.favorites.includes(crypto.id);
+
+        return matchesSearch && matchesFavorite;
+      });
+  }
+
+  // filtrar por nombre o símbolo
+  filterCryptos(): void {
+    this.applyFilters();
+  }
+
+  // cargar favoritos guardados
+  loadFavorites(): void {
+
+    const storedFavorites =
+      localStorage.getItem('cryptoFavorites');
+
+    if (storedFavorites) {
+      this.favorites =
+        JSON.parse(storedFavorites);
+    }
+  }
+
+  // agregar o quitar favorito
+  toggleFavorite(cryptoId: string): void {
+
+    if (this.favorites.includes(cryptoId)) {
+
+      this.favorites =
+        this.favorites.filter(
+          id => id !== cryptoId
+        );
+
+    } else {
+
+      this.favorites.push(cryptoId);
+
+    }
+
+    localStorage.setItem(
+      'cryptoFavorites',
+      JSON.stringify(this.favorites)
+    );
+
+    this.applyFilters();
+  }
+
+  // verificar si una cripto es favorita
+  isFavorite(cryptoId: string): boolean {
+    return this.favorites.includes(cryptoId);
+  }
+
+  // alternar filtro de favoritos
+  toggleFavoritesFilter(): void {
+
+    this.showOnlyFavorites =
+      !this.showOnlyFavorites;
+
+    this.applyFilters();
   }
 
   // abrir detalle de una cripto
@@ -123,7 +189,6 @@ export class App implements OnInit, OnDestroy {
     this.selectedCrypto = null;
   }
 
-  // limpiar el intervalo al destruir el componente
   ngOnDestroy(): void {
 
     if (this.refreshInterval) {
