@@ -1,0 +1,98 @@
+<div
+  class="modal d-block"
+  tabindex="-1"
+  style="background-color: rgba(0, 0, 0, 0.5)"
+>
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          {{ crypto.name }}
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Cerrar"
+          (click)="closeDetail()"
+        ></button>
+
+      </div>
+
+      <div class="modal-body">
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+
+          <img
+            [src]="crypto.image"
+            [alt]="crypto.name"
+            width="64"
+            height="64"
+            class="rounded-circle"
+          >
+
+          <div>
+
+            <h4 class="mb-1">
+              {{ crypto.name }}
+            </h4>
+
+            <span class="text-muted">
+              {{ crypto.symbol.toUpperCase() }}
+            </span>
+
+          </div>
+
+        </div>
+
+        <p>
+          <strong>Precio:</strong>
+          ${{ crypto.current_price }}
+        </p>
+
+        <p>
+          <strong>Capitalización de mercado:</strong>
+          ${{ crypto.market_cap }}
+        </p>
+
+        <p>
+          <strong>Ranking:</strong>
+          #{{ crypto.market_cap_rank }}
+        </p>
+
+        <p class="mb-0">
+
+          <strong>Cambio 24h:</strong>
+
+          <span
+            [class.text-success]="crypto.price_change_percentage_24h >= 0"
+            [class.text-danger]="crypto.price_change_percentage_24h < 0"
+          >
+            {{ crypto.price_change_percentage_24h }}%
+          </span>
+
+        </p>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeDetail()"
+        >
+          Cerrar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

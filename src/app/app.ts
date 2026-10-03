@@ -1,28 +1,41 @@
-import {Component, OnInit, inject} from '@angular/core';
-//importar service
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject
+} from '@angular/core';
+
+// importar service
 import { CryptoService } from './services/crypto.service';
-//importar modelo
+
+// importar modelo
 import { Crypto } from './models/crypto.model';
-//importar componente card
-import { CryptoCardComponent } from './components/crypto-card/crypto-card.component'
+
+// importar componentes
+import { CryptoCardComponent } from './components/crypto-card/crypto-card.component';
+import { CryptoDetailComponent } from './components/crypto-detail/crypto-detail.component';
 
 @Component({
   selector: 'app-root',
   imports: [
-    CryptoCardComponent
+    CryptoCardComponent,
+    CryptoDetailComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
 
   // servicio para obtener los datos de CoinGecko
   private readonly cryptoService =
     inject(CryptoService);
 
-  // lista de criptomonedas
+  // intervalo para actualizar los datos
+  private refreshInterval?: ReturnType<typeof setInterval>;
+
+  // listas de criptomonedas
   cryptos: Crypto[] = [];
-  filteredCryptos: Crypto[] = []
+  filteredCryptos: Crypto[] = [];
 
   // texto ingresado en el buscador
   searchTerm = '';
@@ -33,28 +46,39 @@ export class App implements OnInit {
   // mensaje de error
   errorMessage = '';
 
+  // cripto seleccionada para mostrar detalle
+  selectedCrypto: Crypto | null = null;
+
   // cargar datos al iniciar
   ngOnInit(): void {
     this.loadCryptos();
+
+    // actualizar los datos cada 60 segundos
+    this.refreshInterval = setInterval(() => {
+      this.loadCryptos(false);
+    }, 60000);
   }
 
   // obtener las criptos desde el servicio
-  loadCryptos(): void {
+  loadCryptos(showLoading = true): void {
 
-    this.loading = true;
+    if (showLoading) {
+      this.loading = true;
+    }
+
     this.errorMessage = '';
 
     this.cryptoService
       .getCryptos()
       .subscribe({
 
-        // respuesta de la API
         next: (data) => {
 
-          console.log(data);
-
           this.cryptos = data;
-          this.filteredCryptos = data
+
+          // mantener el filtro actual después de actualizar
+          this.filterCryptos();
+
           this.loading = false;
         },
 
@@ -73,12 +97,38 @@ export class App implements OnInit {
 
       });
   }
-  filterCryptos(): void {
-    const term = this.searchTerm.toLowerCase().trim()
 
-    this.filteredCryptos = this.cryptos.filter((crypto) =>
-      crypto.name.toLowerCase().includes(term) ||
-      crypto.symbol.toLowerCase().includes(term)
-    )
+  // filtrar por nombre o símbolo
+  filterCryptos(): void {
+
+    const term =
+      this.searchTerm
+        .toLowerCase()
+        .trim();
+
+    this.filteredCryptos =
+      this.cryptos.filter((crypto) =>
+        crypto.name.toLowerCase().includes(term) ||
+        crypto.symbol.toLowerCase().includes(term)
+      );
+  }
+
+  // abrir detalle de una cripto
+  selectCrypto(crypto: Crypto): void {
+    this.selectedCrypto = crypto;
+  }
+
+  // cerrar detalle
+  closeDetail(): void {
+    this.selectedCrypto = null;
+  }
+
+  // limpiar el intervalo al destruir el componente
+  ngOnDestroy(): void {
+
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+
   }
 }

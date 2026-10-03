@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core'
-import { Crypto } from '../../models/crypto.model'
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Crypto } from '../../models/crypto.model';
 
 @Component({
   selector: 'app-crypto-card',
@@ -10,5 +10,12 @@ import { Crypto } from '../../models/crypto.model'
 export class CryptoCardComponent {
 
   @Input({ required: true })
-  crypto!: Crypto
+  crypto!: Crypto;
+
+  @Output()
+  cryptoSelected = new EventEmitter<Crypto>();
+
+  selectCrypto(): void {
+    this.cryptoSelected.emit(this.crypto);
+  }
 }
