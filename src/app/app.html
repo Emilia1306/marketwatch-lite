@@ -1,52 +1,49 @@
-<main>
+<h1>MarketWatch Lite</h1>
 
-  <h1>MarketWatch Lite</h1>
+<input
+  type="text"
+  placeholder="Buscar por nombre o símbolo"
+  [value]="searchTerm"
+  (input)="searchTerm = $any($event.target).value; filterCryptos()"
+>
 
-  @if (loading) {
-    <p>Cargando criptomonedas...</p>
-  }
+@if (loading) {
+  <p>Cargando criptomonedas...</p>
+}
 
-  @if (errorMessage) {
-    <p>{{ errorMessage }}</p>
-  }
+@if (errorMessage) {
+  <p>{{ errorMessage }}</p>
+}
 
-  @if (!loading && !errorMessage) {
+@if (!loading && !errorMessage) {
 
-    @for (crypto of cryptos; track crypto.id) {
+  @for (crypto of filteredCryptos; track crypto.id) {
 
-      <article>
+    <article>
 
-        <img
-          [src]="crypto.image"
-          [alt]="crypto.name"
-          width="40"
-        >
+      <img
+        [src]="crypto.image"
+        [alt]="crypto.name"
+        width="40"
+      >
 
-        <h2>
-          {{ crypto.name }}
-        </h2>
+      <h2>{{ crypto.name }}</h2>
 
-        <p>
-          {{ crypto.symbol.toUpperCase() }}
-        </p>
+      <p>
+        {{ crypto.symbol.toUpperCase() }}
+      </p>
 
-        <p>
-          Precio: ${{ crypto.current_price }}
-        </p>
+      <p>
+        Precio: ${{ crypto.current_price }}
+      </p>
 
-        <p>
-          Cambio 24h:
-          {{ crypto.price_change_percentage_24h }}%
-        </p>
+      <p>
+        Cambio 24h:
+        {{ crypto.price_change_percentage_24h }}%
+      </p>
 
-      </article>
-
-    } @empty {
-
-      <p>No hay activos disponibles</p>
-
-    }
+    </article>
 
   }
 
-</main>
+}

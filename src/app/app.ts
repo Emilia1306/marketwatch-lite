@@ -17,6 +17,10 @@ export class App implements OnInit {
 
   // lista de criptomonedas
   cryptos: Crypto[] = [];
+  filteredCryptos: Crypto[] = []
+
+  // texto ingresado en el buscador
+  searchTerm = '';
 
   // estado de carga
   loading = false;
@@ -45,14 +49,14 @@ export class App implements OnInit {
           console.log(data);
 
           this.cryptos = data;
-
+          this.filteredCryptos = data
           this.loading = false;
         },
 
         error: (error) => {
 
           console.error(
-            'Error loading cryptocurrencies:',
+            'Error loading cryptos:',
             error
           );
 
@@ -63,5 +67,13 @@ export class App implements OnInit {
         }
 
       });
+  }
+  filterCryptos(): void {
+    const term = this.searchTerm.toLowerCase().trim()
+
+    this.filteredCryptos = this.cryptos.filter((crypto) =>
+      crypto.name.toLowerCase().includes(term) ||
+      crypto.symbol.toLowerCase().includes(term)
+    )
   }
 }
